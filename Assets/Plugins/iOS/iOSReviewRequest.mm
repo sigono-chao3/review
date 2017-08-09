@@ -6,6 +6,7 @@
         message:(NSString *) message
         cancelButtonTitle:(NSString *) cancelButtonTitle
         otherButtonTitle:(NSString *) otherButtonTitle;
+-(NSInteger) getLastResult;
 @end
 
 extern "C" {
@@ -28,11 +29,16 @@ extern "C" {
                    const char* message,
                    const char* cancelButtonText,
                    const char* otherButtonText){
+
+        NSString *nsTitle= [NSString stringWithUTF8String:title];
+        NSString *nsMessage= [NSString stringWithUTF8String:message];
+        NSString *nsCancelButton= [NSString stringWithUTF8String:cancelButtonText];
+        NSString *nsOtherButton= [NSString stringWithUTF8String:otherButtonText];
         
-        [[AlertViewController sharedInstance] show: [NSString stringWithUTF8String:title]
-                                              message :[NSString stringWithUTF8String:message]
-                                              cancelButtonTitle:[NSString stringWithUTF8String:cancelButtonText]
-                                              otherButtonTitle:[NSString stringWithUTF8String:otherButtonText]];
+        [[AlertViewController sharedInstance] show: nsTitle
+                                              message: nsMessage
+                                              cancelButtonTitle: nsCancelButton
+                                              otherButtonTitle: nsOtherButton];
 
     }
 
@@ -60,16 +66,22 @@ static AlertViewController *_instance;
     return _instance;
 }
 
--(void) show:title:(NSString *)title
+-(void) show:(NSString *)title
              message:(NSString *)message
              cancelButtonTitle:(NSString *)cancelButtonTitle
              otherButtonTitle:(NSString *)otherButtonTitle {
+    
+    NSLog(@"%@", title);
+    NSLog(@"%@", message);
+    NSLog(@"%@", cancelButtonTitle);
+    NSLog(@"%@", otherButtonTitle);
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
                                                     message:message
                                                    delegate:self
                                           cancelButtonTitle:cancelButtonTitle
-                                          otherButtonTitles:otherButtonTitle];
+                                          otherButtonTitles: otherButtonTitle, nil];
+    [alert show];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
